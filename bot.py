@@ -30,14 +30,15 @@ async def on_message(message):
         msg = result.json()[0]['url']
         await client.send_message(message.channel, msg)
 
-    #ping
-    if message.content.startswith('ping'):
-        msg = 'pong'
-        await client.send_message(message.channel, msg)
-
-    #pong
-    if message.content.startswith('pong'):
-        msg = 'ping'
+    #!mmr
+    if message.content.startswith('!mmr'):
+        msg = "Dota2 MMR:\n"
+        people = {"Ricsi": "105340260", "Misi": "167548908", "Imi": "49933861"}
+        for person, dota_id in people.items():
+            result = requests.get('https://api.opendota.com/api/players/' + dota_id) 
+            mmr = result.json()['mmr_estimate']['estimate']
+            player = result.json()['profile']['personaname']
+            msg += person + ": " + str(mmr) + " (" + player + ")\n"
         await client.send_message(message.channel, msg)
 
     if message.channel.name != 'bottest':
