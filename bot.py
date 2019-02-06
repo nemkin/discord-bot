@@ -26,7 +26,8 @@ async def on_message(message):
 
     #!cica
     if message.content.startswith('!cica'):
-        result = requests.get('https://api.thecatapi.com/v1/images/search?mime_types=gif&size=full')
+        result = requests.get('https://api.thecatapi.com/v1/images/'\
+                              'search?mime_types=gif&size=full')
         msg = result.json()[0]['url']
         await client.send_message(message.channel, msg)
 
@@ -34,6 +35,17 @@ async def on_message(message):
     if message.content.startswith('!roka'):
         result = requests.get('https://randomfox.ca/floof')
         msg = result.json()['image']
+        await client.send_message(message.channel, msg)
+
+    if message.content.startswith('!cikk'):
+        random_url = 'https://index.hu/tudomany/til/?op=random'
+        article_url = requests.head(\
+                          random_url,\
+                          timeout=100.0,\
+                          headers={'Accept-Encoding': 'identity'})\
+                              .headers.get('location', random_url)
+
+        msg = article_url
         await client.send_message(message.channel, msg)
 
     if message.channel.name != 'bottest':
