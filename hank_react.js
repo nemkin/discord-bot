@@ -1,6 +1,9 @@
 import { Client, Intents } from "discord.js";
 
+import dotenv from "dotenv";
 import fetch from "node-fetch";
+
+dotenv.config();
 
 const catUrl = "https://api.thecatapi.com/v1/images/search?mime_types=gif";
 
