@@ -1,61 +1,35 @@
 import discord
 import requests
-
-client = discord.Client()
-
-@client.event
-async def on_message(message):
-
-    if message.author == client.user:
-        return
-
-    print('(' + message.channel.name + ') ' +\
-          message.author.name  + ': ' +\
-          message.content)
-
-    #!hello
-    if message.content.startswith('!hello'):
-        msg = 'Hello {0.author.mention}'.format(message)
-        await client.send_message(message.channel, msg)
-
-    #!vicc
-    if message.content.startswith('!vicc'):
-        result = requests.get(url='http://api.icndb.com/jokes/random')
-        msg = result.json()['value']['joke'].replace('&quot;', '"')
-        await client.send_message(message.channel, msg)
-
-    #!cica
-    if message.content.startswith('!cica'):
-        result = requests.get('https://api.thecatapi.com/v1/images/'\
-                              'search?mime_types=gif&size=full')
-        msg = result.json()[0]['url']
-        await client.send_message(message.channel, msg)
-
-    #!roka
-    if message.content.startswith('!roka'):
-        result = requests.get('https://randomfox.ca/floof')
-        msg = result.json()['image']
-        await client.send_message(message.channel, msg)
-
-    if message.content.startswith('!cikk'):
-        random_url = 'https://index.hu/tudomany/til/?op=random'
-        article_url = requests.head(\
-                          random_url,\
-                          timeout=100.0,\
-                          headers={'Accept-Encoding': 'identity'})\
-                              .headers.get('location', random_url)
-
-        msg = article_url
-        await client.send_message(message.channel, msg)
-
-    if message.channel.name != 'bottest':
-        return
-
-@client.event
-async def on_ready():
-    print(client.user.name + ' is running.')
+import random
 
 with open('token') as token_file:
     token = token_file.read().replace('\n','')
+with open('apikey') as apikey_file:
+    apikey = apikey_file.read().replace('\n','')
+
+headers = {'x-api-key': apikey}
+
+client = discord.Client()
+
+def cat():
+  response = requests.get(url='https://api.thecatapi.com/v1/images/search?mime_types=gif', headers=headers)
+  data = response.json()
+  return data[0]["url"]
+
+
+@client.event
+async def on_ready():
+    print('We have logged in as {0.user}'.format(client))
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+
+    if message.content.startswith('!hello'):
+        catgif = cat()
+        await message.channel.send(f'Is it me you\'re looking for {message.author.mention}?')
+        await message.channel.send(catgif)
 
 client.run(token)
+
