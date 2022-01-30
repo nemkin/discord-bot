@@ -1,5 +1,6 @@
 import { Client, Intents, MessageEmbed } from "discord.js";
 
+import cron from "node-cron";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -25,7 +26,9 @@ client.once("ready", async () => {
     .setColor("#BD93F9")
     .setImage("https://c.tenor.com/IMYZL-7t2ucAAAAC/cat-butt.gif");
     
-  channel.send({ embeds: [message] }).then((_) => client.destroy());
+    cron.schedule("0 12,14,18,20 * * *", () => {
+      channel.send({ embeds: [message] });
+    });
 });
 
 client.login(process.env.DISCORD_TOKEN);
