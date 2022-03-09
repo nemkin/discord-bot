@@ -35,28 +35,6 @@ class Media {
   }
 }
 
-client.once("ready", async () => {
-  const channel = await client.channels.fetch(process.env.CHANNEL_ID);
-  const user = await client.users.fetch(process.env.USER_ID);
-
-  const message = new MessageEmbed()
-    .setDescription("Hast du ja gegessen? :eyes:\n\n" + user.toString())
-    .setAuthor({
-      name: "Hallo Tinny!",
-      iconURL: Media.hearts(),
-    })
-    .setFooter({
-      text: "Bitte?",
-      iconURL: Media.cryCat(),
-    })
-    .setColor("#BD93F9")
-    .setImage(Media.eatCat());
-    
-  cron.schedule("0 11,13,17,19 * * *", () => {
-    channel.send({ embeds: [message] });
-  });
-});
-
 client.on("message", async (message) => {
   const msg = message.content;
   if (msg.startsWith("!hello")) {
